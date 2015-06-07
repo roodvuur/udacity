@@ -31,14 +31,11 @@ def compute_r_squared(values, features, theta):
 	Compute r squared, a measure of how much correlatione exists between our predictor variables
 	and our independent variable
 	"""
-	#predictions = np.dot(features, theta)
-	#data = values
-	#r_squared = 1 - (np.dot((data - predictions), (data - predictions))) / (np.dot((data - np.mean(data)), (data - np.mean(data))))
 
 	# Calculate predicted values
 	predicted = np.dot(features, theta)
 	# Calculate predicted values mean
-	mu = np.mean(predicted)
+	mu = np.mean(values)
 	# Calculate numerator and denominator
 	numerator = np.square(values - predicted).sum()
 	denominator = np.square(values - mu).sum()
@@ -90,6 +87,7 @@ def predictions(df):
 	"""
 	# Set features
 	features = df[['rain', 'precipi', 'meanwindspdi', 'Hour', 'meantempi']]
+
 	# Convert categorical UNIT variables into numerical dummy variables
 	dummy_units = pandas.get_dummies(df['UNIT'], prefix='unit')
 	features = features.join(dummy_units)
@@ -100,13 +98,16 @@ def predictions(df):
 	# Normalize features
 	features, mu, sigma = normalize_features(features)
 
+	# Add a column of ones to features
+	features['ones'] = np.ones(len(values))
+
 	# Convert features, values to NumPy arrays
 	features_array = np.array(features)
 	values_array = np.array(values)
 
 	# Set values for num_iterations and alpha
 	num_iterations = 75
-	alpha = 0.1
+	alpha = 0.5
 
 	# Initiazize theta and perform gradient descent
 	theta_gradient_descent = np.zeros(len(features.columns))
@@ -119,7 +120,6 @@ def predictions(df):
 	# Create cost history plot
 	plot = None
 	#plot = plot_cost_history(alpha, cost_history)
-
 	return predictions, plot
 
 def plot_cost_history(alpha, cost_history):
@@ -136,7 +136,7 @@ def plot_cost_history(alpha, cost_history):
 # Read master CSV file
 csv = pandas.read_csv('D:/turnstile_master.csv')
 # Create an NumPy array of sample_size numbers, all between 0 and the amount of rows in our master csv
-sample_size = 500
+sample_size = 15000
 index = np.array(sample(range(len(csv)), sample_size))
 # Pick rows corresponding to the random index list from master csv and store in our dataframe
 df = csv.ix[index]
