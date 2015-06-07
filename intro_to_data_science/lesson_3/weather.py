@@ -164,7 +164,7 @@ def plot_residuals(turnstile_weather, predictions):
 	return plt
 
 # Read master CSV file
-csv = pandas.read_csv('D:/turnstile_master.csv')
+csv = pandas.read_csv('turnstile_master.csv')
 # Create an NumPy array of sample_size numbers, all between 0 and the amount of rows in our master csv
 sample_size = 5000
 index = np.array(sample(range(len(csv)), sample_size))
