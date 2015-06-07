@@ -156,7 +156,7 @@ def plot_cost_history(alpha, cost_history):
 		'Cost_History': cost_history,
     	'Iteration': range(len(cost_history))
 	})
-	return ggplot(cost_df, aes('Iteration', 'Cost_History')) + geom_point() + ggtitle('Cost History for alpha = %.3f' % alpha )
+	return ggplot(cost_df, aes('Iteration', 'Cost_History')) + geom_point() + geom_line() + ggtitle('Cost History for alpha = %.3f' % alpha )
 
 def plot_residuals(turnstile_weather, predictions):
 	plt.figure()
