@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import statsmodels.api as sm
 import scipy
 import pandas
 from ggplot import *
@@ -86,7 +87,7 @@ def predictions(df):
 	Make predictions about our data using numerous functions in this document
 	"""
 	# Set features
-	features = df[['rain', 'precipi', 'meanwindspdi', 'Hour', 'meantempi']]
+	features = df[['rain', 'meanwindspdi', 'Hour', 'meantempi']]
 
 	# Convert categorical UNIT variables into numerical dummy variables
 	dummy_units = pandas.get_dummies(df['UNIT'], prefix='unit')
@@ -120,32 +121,60 @@ def predictions(df):
 	# Create cost history plot
 	plot = None
 	#plot = plot_cost_history(alpha, cost_history)
-	return predictions, plot
+	return predictions, plot, theta_gradient_descent
+
+def predictions_ols(df):
+	"""
+	Make predictions about the subway ridership based on predictions_ols
+	"""
+	# Set features
+	features = df[['rain', 'meanwindspdi', 'Hour', 'meantempi']]
+
+	# Convert categorical UNIT variables into numerical dummy variables
+	dummy_units = pandas.get_dummies(df['UNIT'], prefix='unit')
+	features = features.join(dummy_units)
+
+	# Get observed values
+	values = df['ENTRIESn_hourly']
+
+	# Normalize features
+	features, mu, sigma = normalize_features(features)
+
+	# Add a column of ones to features
+	features['ones'] = np.ones(len(values))
+
+	model = sm.OLS(values, features)
+	results = model.fit()
+
+	return results
 
 def plot_cost_history(alpha, cost_history):
-   """
-   Plot the cost history
-   """
-   cost_df = pandas.DataFrame({
-      'Cost_History': cost_history,
-      'Iteration': range(len(cost_history))
-   })
-   return ggplot(cost_df, aes('Iteration', 'Cost_History')) + \
-      geom_point() + ggtitle('Cost History for alpha = %.3f' % alpha )
+	"""
+	Plot the cost history
+	"""
+	cost_df = pandas.DataFrame({
+		'Cost_History': cost_history,
+    	'Iteration': range(len(cost_history))
+	})
+	return ggplot(cost_df, aes('Iteration', 'Cost_History')) + geom_point() + ggtitle('Cost History for alpha = %.3f' % alpha )
 
 def plot_residuals(turnstile_weather, predictions):
 	plt.figure()
-	(turnstile_weather['ENTRIESn_hourly'] - predictions).hist(bins=50)
+	(turnstile_weather['ENTRIESn_hourly'] - predictions).hist(bins=150)
 	return plt
 
 # Read master CSV file
 csv = pandas.read_csv('D:/turnstile_master.csv')
 # Create an NumPy array of sample_size numbers, all between 0 and the amount of rows in our master csv
-sample_size = 15000
+sample_size = 5000
 index = np.array(sample(range(len(csv)), sample_size))
 # Pick rows corresponding to the random index list from master csv and store in our dataframe
 df = csv.ix[index]
 
-preds, plot = predictions(df)
-plt = plot_residuals(df, preds)
-plt.show()
+predictions, plot, theta = predictions(df)
+results = predictions_ols(df)
+
+p1 = plot_residuals(df, predictions)
+p2 = plot_residuals(df, results.predict())
+p1.show()
+p2.show()
