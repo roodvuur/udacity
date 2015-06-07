@@ -1,6 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
 import scipy
-import scipy.stats
 import pandas
 from ggplot import *
 from random import sample
@@ -133,6 +133,11 @@ def plot_cost_history(alpha, cost_history):
    return ggplot(cost_df, aes('Iteration', 'Cost_History')) + \
       geom_point() + ggtitle('Cost History for alpha = %.3f' % alpha )
 
+def plot_residuals(turnstile_weather, predictions):
+	plt.figure()
+	(turnstile_weather['ENTRIESn_hourly'] - predictions).hist(bins=50)
+	return plt
+
 # Read master CSV file
 csv = pandas.read_csv('D:/turnstile_master.csv')
 # Create an NumPy array of sample_size numbers, all between 0 and the amount of rows in our master csv
@@ -142,4 +147,5 @@ index = np.array(sample(range(len(csv)), sample_size))
 df = csv.ix[index]
 
 preds, plot = predictions(df)
-print plot
+plt = plot_residuals(df, preds)
+plt.show()
