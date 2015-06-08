@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta charset="UTF-8">
+	<title>Into to Data Science, Final Project</title>
+</head>
+<body>
+<section id="1">
+	<h2>
+		Statistical Test
+	</h2>
+	<p>
+		We used the Mann-Whitney U-test to test the relationship between rain and subway ridership. This was a non-directional test, as it not yet known if rain positively or negatively impacts the subway ridership, thus, a two-tailed test was appropriate with a p-critical value of 0.025. Null hypothesis:
+	</p>
+		<quote>
+			There is no statistical significant correlation between rain and subway ridership.
+		</quote>
+	<p>
+		The dependent variable, the number of entries per hour, is heavily (positively) skewed, and so we had to use a test that allowed for this. Therefore, the Mann-Whiteny U-test was utilized, and not an ordinary T-test.
+	</p>
+	<p>
+		We calculated the means of subway ridership with and without rain to be 1105 and 1090, respectively. The results were significant, but barely. With a p-value of 0.2499991, we can now say that there is a correlation between rain and subway ridership.
+	</p>
+	<p>
+		Whether it rains or not is up to the weather gods, and completely independent of any other value. I think it's safe to say that subway ridership does not cause rain, and as such, rain must cause an increase in subway ridership. This, of course, is a very logical conclusion as all other modes of transportation affected by rain (walking, cycling, but not driving or taking a cab) become a less atractive option.
+	</p>
+	<h2>
+		Linear regression
+	</h2>
+	<p>
+		I used both gradient descent and OLS (using Statsmodels) to produce predictions for ENTRIESn_hourly in my regression model. Both produced exacly (accounting for rounding) the same coefficients.
+	</p>
+	<p>
+		For features, or input variables, I chose Hour, maximum temperature, meanwindsdpi and rain. Also, a column of 1s was added (intercept) and used dummy variables for the UNIT variable.
+	</p>
+	<p>
+		From all the variables to choose from, Hour immediately caught my eye as probably being the most influencial. After all, people's traveling habits are generally periodical. Maximum temperature, I believe, is more influential than mean temperature as the mean temperature takes the temperatures at night into account, whereas people more frequently travel when the sun's still shining, especially in May. I chose rain and wind because, judging by own experience, those are the weather conditions that might trigger you to use public transportation.
+	</p>
+	<p>
+		Taking into account the subway station (by proxy, via UNIT) greatly increased my model's accuracy, but did so at the cost of creating hundreds of additional theta-values. But more importantly, it adds complexity whereas the geographical location is not of importance in any of our big questions. However, it's a crucial statistic in estimating the total number of subway entries given all other variables are known.
+	</p>
+	<p>
+		After some testing, I found the following values:
+		<table>
+			<th><tr><td>Feature</td><td>Parameter</td></tr></th>
+			<tr><td>Rain</td><td>2.0865</td></tr>
+			<tr><td>Wind</td><td>59.1678</td></tr>
+			<tr><td>Hour</td><td>413.8185</td></tr>
+			<tr><td>Temperature</td><td>-13.3750</td></tr>
+			<tr><td>Intercept</td><td>1102.1463</td></tr>
+		</table>
+		With an R squared value of 0.03477. Note that this is without utilizing the UNIT feature, if we do, our R squared increases to 0.5022.
+	</p>
+	<p>
+		We can see that the specific turnstile unit plays a huge role in predicting the entries on a given hour, with a given temperature, rain, and wind. This is to be expected, as there naturally are busy and not-so-busy stations. Furthermore, an R squared value of 0.5022 is actually pretty high. It appears as if our model has a pretty good fit on the actual data.
+	</p>
+	<h2> 
+		Visualization
+	</h2>
+	<p>
+		Here's a histogram depicting the turnstile entries (hourly) with both rain and dry weather. Both appear to have roughly the same distribution, albeit not normal, which caused us to use the Mann-Whitney U-test.
+		<img src='histogram_rain.png' alt='Histogram of ENTRIESn_hourly, rain and no rain'>
+	</p>
+	<p>
+		Then I've made a graph of subway entries by day, taken over the course of the month of May, 2011. It immediately becomes very clear that day of the week is the driving force behind the subway ridership on any given day. It's a cyclical graph, with minima at Sundays and maxima at Wednesdays and Thursdays. Also notable is the even lower minimum at the last Monday, being Memorial Day. 
+		<img src='plot_entries_by_day.png' alt='Plot of ENTRIESn_hourly over days'>
+	</p>
+
+</body>
+</html>
