@@ -3,6 +3,31 @@
 	<head>
 	<meta charset="UTF-8">
 	<title>Into to Data Science, Final Project</title>
+	<style rel="stylesheet">
+	body {
+		margin: auto;
+		width: 50em;
+	}
+	img {
+		float: left;
+		margin: 0;
+		width: 50%;
+	}
+	img.finallast {
+		float: right;
+	}
+	table {
+		width: 100%;
+		margin: 1em 0;
+	}
+	table .header {
+		font-weight: bold;
+	}
+	quote {
+		color: #555555;
+		margin-left: 1em;
+	}
+	</style>
 </head>
 <body>
 <section id="1">
@@ -19,10 +44,7 @@
 		The dependent variable, the number of entries per hour, is heavily (positively) skewed, and so we had to use a test that allowed for this. Therefore, the Mann-Whiteny U-test was utilized, and not an ordinary T-test.
 	</p>
 	<p>
-		We calculated the means of subway ridership with and without rain to be 1105 and 1090, respectively. The results were significant, but barely. With a p-value of 0.2499991, we can now say that there is a correlation between rain and subway ridership.
-	</p>
-	<p>
-		Whether it rains or not is up to the weather gods, and completely independent of any other value. I think it's safe to say that subway ridership does not cause rain, and as such, rain must cause an increase in subway ridership. This, of course, is a very logical conclusion as all other modes of transportation affected by rain (walking, cycling, but not driving or taking a cab) become a less atractive option.
+		We calculated the means of subway ridership with and without rain to be 1105 and 1090, respectively. The results were insignificant. With a p-value of 0.02499991, we can now say that there is a correlation between rain and subway ridership.
 	</p>
 	<h2>
 		Linear regression
@@ -42,7 +64,7 @@
 	<p>
 		After some testing, I found the following values:
 		<table>
-			<th><tr><td>Feature</td><td>Parameter</td></tr></th>
+			<tr class='header'><td>Feature</td><td>Parameter</td></tr>
 			<tr><td>Rain</td><td>2.0865</td></tr>
 			<tr><td>Wind</td><td>59.1678</td></tr>
 			<tr><td>Hour</td><td>413.8185</td></tr>
@@ -57,14 +79,36 @@
 	<h2> 
 		Visualization
 	</h2>
+	<img src='histogram_rain.png' alt='Histogram of ENTRIESn_hourly, rain and no rain'>
+	<img src='plot_entries_by_day.png' alt='Plot of ENTRIESn_hourly over days'>
+	<img class='finallast' src='histogram_unit.png' alt='Histogram of ENTRIESn_hourly per unit'>
+	<img src='plot_entries_by_unit.png' alt='Plot of ENTRIESn_hourly over unit'>
 	<p>
 		Here's a histogram depicting the turnstile entries (hourly) with both rain and dry weather. Both appear to have roughly the same distribution, albeit not normal, which caused us to use the Mann-Whitney U-test.
-		<img src='histogram_rain.png' alt='Histogram of ENTRIESn_hourly, rain and no rain'>
 	</p>
 	<p>
 		Then I've made a graph of subway entries by day, taken over the course of the month of May, 2011. It immediately becomes very clear that day of the week is the driving force behind the subway ridership on any given day. It's a cyclical graph, with minima at Sundays and maxima at Wednesdays and Thursdays. Also notable is the even lower minimum at the last Monday, being Memorial Day. 
-		<img src='plot_entries_by_day.png' alt='Plot of ENTRIESn_hourly over days'>
 	</p>
-
+	<p>
+		And then I've made two plots of entries per unit, a scatter plot and a histogram. The scatter plot gives the whole picture, although it's a little hard to comprehend. The histogram, on the other hand, condenses the information somewhat. But in the end, they tell the same story. There's one really busy turnstile unit, then a few moderately busy units and finally a range of units with no notable amount of entries. This is to be expected in a subway system, really.
+	</p>
+	<h2>
+		Conclusion
+	</h2>
+	<p>
+		We can't really be sure, but I think that, especially in the grand scheme of things, it doesn't matter. We've seen from the rain / no rain histogram that the distribution of entries per hour doesn't differ, whereas we would expect at least a small difference if rain was an important predictor.
+	</p>
+	<p>
+		We did get a significant P-value from out Mann-Whitney U-test, but I believe this is a case where blindly following statistics is not going to get you far. For one, the P-value was incredibly high, about as high as it could get without crossing the P-critical line. In other words, if we had chosen any different value of alpha, we would have found no significant difference between subway ridership with- and without rain. This is reflected in our OLS regression analysis, where rain got a very low parameter indicating it has little effect on the hourly entries.
+	</p>
+	<h2>
+		Reflection
+	</h2>
+	<p>
+		We used a dataset consisting of subway ridership data in the month of May, 2011. This is clearly not representative of the entire year, or even longer periods of time. For example, while rain does not appear to affect subway ridership, this could be because the rains in May are quite mild compared to the storms and snow you could get in January. The same goes for statistics as temperature, and wind. 
+	</p>
+	<p>
+		Because this is an 'Into to..' class, the analysis I used on this dataset is quite rudimentary. For all I know, the relationship between certain statistics is polynomial. I'm afraid I do not yet have enough knowledge about the many statistical tests available to make sound conclusions on the validity of the tests I used. 
+	</p>
 </body>
 </html>
