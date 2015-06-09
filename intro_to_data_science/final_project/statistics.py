@@ -141,8 +141,8 @@ def predictions_ols(df):
 	features = df[['rain', 'meanwindspdi', 'Hour', 'maxtempi']]
 
 	# Convert categorical UNIT variables into numerical dummy variables
-	#dummy_units = pandas.get_dummies(df['UNIT'], prefix='unit')
-	#features = features.join(dummy_units)
+	dummy_units = pandas.get_dummies(df['UNIT'], prefix='unit')
+	features = features.join(dummy_units)
 
 	# Get observed values
 	values = df['ENTRIESn_hourly']
@@ -190,6 +190,4 @@ p1, results = predictions_ols(df)
 # Compare the two predictions
 U, p = mann_whitneyu(p1, p2)
 
-print results.tvalues
 print results.rsquared
-print theta

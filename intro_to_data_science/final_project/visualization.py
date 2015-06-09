@@ -17,9 +17,11 @@ def plot_weather_data(turnstile_weather):
 	# Subway ridership by subway station
 	# Create pivot table with UNIT on one hand, and cummulative entries on the other
 	df_subway_station = turnstile_weather.loc[:, ['UNIT', 'ENTRIESn_hourly']].groupby(['UNIT'], as_index = False).sum()
+	# Convert UNIT names to numerical values, so it can be shown on a line plot
+	df_subway_station['UNIT'] = range(0, len(df_subway_station))
 	# Create plot
 	df_subway_station_plot = ggplot(df_subway_station, aes(x = 'UNIT'))
-	df_subway_station_plot = df_subway_station_plot + geom_bar(aes(x = 'UNIT', weight ='ENTRIESn_hourly'))
+	df_subway_station_plot = df_subway_station_plot + geom_point(aes(x = 'UNIT', y ='ENTRIESn_hourly')) + scale_x_continuous(limits = (0, len(df_subway_station['UNIT']) + 1)) + scale_y_continuous(limits = (0, 1.05 * max(df_subway_station['ENTRIESn_hourly'])))
 
 	# Subway ridership, total
 	# Create pivot table with DATEn on one hand, and entries on the other
@@ -36,4 +38,4 @@ def plot_weather_data(turnstile_weather):
 data = 'turnstile_master.csv'
 df = read_csv(data)
 tof, ss, tt = plot_weather_data(df)
-print tt
+print ss
